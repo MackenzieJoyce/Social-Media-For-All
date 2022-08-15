@@ -29,12 +29,23 @@ const userSchema = new Schema(
         ]
     },
     {
-        // use virutals for friendCount 
+        // Use .toJSON() as a call for JSON.stringify() 
+        toJSON: { 
+            virtuals: true, 
+        },
+        id: false,
     }
 );
 
 // set up vitual for friendCount
+userSchema
+    .virtual('friendCount')
+    .get(function () {
+        return this.friends.length
+    });
 
-// set up model
+// Initialize User model 
+const User = model('user', userSchema); 
 
-// export model 
+// Export model 
+module.exports = User; 
