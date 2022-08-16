@@ -34,7 +34,11 @@ module.exports = {
       { $set: req.body },
       { runValidators: true, new: true }
     )
-      .then(() => res.json({ message: 'Changed this thought!' }))
+      .then((course) =>
+        !thought
+          ? res.status(404).json({ message: 'Oops! No thoughts.' })
+          : res.json(thought)
+      )
       .catch((err) => res.status(500).json(err));
   },
   // Delete a thought by ID
@@ -47,5 +51,5 @@ module.exports = {
       )
       .then(() => res.json({ message: 'No more thoughts!' }))
       .catch((err) => res.status(500).json(err));
-  },
+  }
 };
