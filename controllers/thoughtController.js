@@ -34,7 +34,7 @@ module.exports = {
       { $set: req.body },
       { runValidators: true, new: true }
     )
-      .then((course) =>
+      .then((thought) =>
         !thought
           ? res.status(404).json({ message: 'Oops! No thoughts.' })
           : res.json(thought)
