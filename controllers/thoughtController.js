@@ -10,10 +10,6 @@ module.exports = {
   // Get a thought by id
   getThoughtById(req, res) {
     Thought.findOne({ _id: req.params.thoughtId })
-      .populate({
-        path: 'thought',
-        select: '-_v'
-      })
       .select('-_v')
       .then((thought) =>
         !thought
