@@ -1,6 +1,18 @@
-//express, db from config, routes from routes
+const express = require('express');
+const db = require('./config/connection');
+const routes = require('./routes');
 
-// port
-// app
+// const cwd = process.cwd();
 
-// app.use for url encoded 
+const PORT = 3001;
+const app = express();
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(routes);
+
+db.once('open', () => {
+  app.listen(PORT, () => {
+    console.log(`API running on port ${PORT}!`);
+  });
+});
