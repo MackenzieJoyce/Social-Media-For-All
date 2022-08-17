@@ -8,7 +8,7 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   // Get user by id
-  getUsersById(req, res) {
+  getUserById(req, res) {
     User.findOne({ _id: req.params.userId })
       .select(-_v)
       .then((user) =>
@@ -27,7 +27,7 @@ module.exports = {
       });
   },
   // Update a user by ID
-  upadateUserById(req, res) {
+  updateUserById(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
       { $set: req.body },
