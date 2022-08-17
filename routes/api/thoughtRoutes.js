@@ -26,7 +26,7 @@ const {
 } = require('../../controllers/thoughtController');
 
 // /api/reactions
-router.route('/').get(getReactions).post(createReaction);
+router.route('/').post(createReaction);
 
 // /api/reactions/:reactionId
 router.route('/:reactionId').delete(deleteReactionById);
