@@ -10,7 +10,7 @@ module.exports = {
   // Get user by id
   getUserById(req, res) {
     User.findOne({ _id: req.params.userId })
-      .select(-_v)
+      .select('-_v')
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'Oops! No one here.' })
