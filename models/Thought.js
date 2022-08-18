@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
+const { ObjectId } = require('mongoose').Types;
 const reactionSchema = require('./Reaction');
 const date = require('../utils/date');
 

@@ -1,4 +1,5 @@
-const { Schema } = require('mongoose');
+const { Schema, Types } = require('mongoose');
+const { ObjectId } = require('mongoose').Types;
 const date = require('../utils/date');
 
 // Schema to create Reaction model
