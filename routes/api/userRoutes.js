@@ -4,7 +4,9 @@ const {
   getUserById,
   createUser,
   updateUserById,
-  deleteUserById
+  deleteUserById,
+  addFriend,
+  removeFriend
 } = require('../../controllers/userControllers.js');
 
 // /api/users
@@ -17,6 +19,6 @@ router
   .put(updateUserById)
   .delete(deleteUserById);
 
-module.exports = router; 
+module.exports = router;
 
-// Not sure how to get the thoughts and friends data 
+router.route('/:userId/friends/:friendId').post(addFriend).delete(removeFriend);

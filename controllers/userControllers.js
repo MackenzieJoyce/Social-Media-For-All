@@ -51,5 +51,34 @@ module.exports = {
       )
       .then(() => res.json({ message: 'Goodbye, User!' }))
       .catch((err) => res.status(500).json(err));
+  },
+  //-----FRIENDS
+  // Add friend
+  addFriend(req, res) {
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $addToSet: { friends: req.params.friendId } },
+      { runValidators: true, new: true }
+    )
+      .then((user) =>
+        !user
+          ? res.status(400).json({ message: 'Oops! No one here. ' })
+          : res.json(user)
+      )
+      .catch((err) => res.status(500).json(err));
+  },
+  // Delete a friend by ID
+  removeFriend(req, res) {
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $pull: { friends: req.params.friendId } },
+      { runValidators: true, new: true }
+    )
+      .then((user) =>
+        !user
+          ? res.status(400).json({ message: 'Oops! No one here. ' })
+          : res.json(user)
+      )
+      .catch((err) => res.status(500).json(err));
   }
 };
