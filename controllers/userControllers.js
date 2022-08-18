@@ -15,7 +15,8 @@ module.exports = {
         !user
           ? res.status(404).json({ message: 'Oops! No one here.' })
           : res.json(user)
-      );
+      )
+      .catch((err) => res.status(500).json(err));
   },
   // Create a user
   createUser(req, res) {
@@ -32,11 +33,13 @@ module.exports = {
       { _id: req.params.userId },
       { $set: req.body },
       { runValidators: true, new: true }
-    ).then((user) =>
-      !user
-        ? res.status(404).json({ message: 'Oops! No one here.' })
-        : res.json(user)
-    );
+    )
+      .then((user) =>
+        !user
+          ? res.status(404).json({ message: 'Oops! No one here.' })
+          : res.json(user)
+      )
+      .catch((err) => res.status(500).json(err));
   },
   // Delete a user by ID
   deleteUserById(req, res) {
