@@ -65,11 +65,6 @@ module.exports = {
           { new: true }
         )
       )
-      .then((thought) =>
-        !thought
-          ? res.status(404).json({ message: 'Oops! No thoughts.' })
-          : User.deleteMany({ _id: { $in: thought.username } })
-      )
       .then(() => res.json({ message: 'No more thoughts!' }))
       .catch((err) => res.status(500).json(err));
   },
