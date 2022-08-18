@@ -20,7 +20,8 @@ To run this project, open the Integrated Terminal and type in "npm start" then o
 </br></br>
 
 ## Testing
-
+View the demo here! 
+https://drive.google.com/file/d/1rBHPUpQ69TA8lIkugk2Krqa90ZCHr9Fm/view
 </br></br>
 
 ## License
