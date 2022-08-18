@@ -11,7 +11,7 @@ module.exports = {
   // Get a thought by id
   getThoughtById(req, res) {
     Thought.findOne({ _id: req.params.thoughtId })
-      .select('-_v')
+      .select('-__v')
       .then((thought) =>
         !thought
           ? res.status(404).json({ message: 'Oops! No thoughts.' })
@@ -24,11 +24,18 @@ module.exports = {
     Thought.create(req.body)
       .then((thought) => {
         return User.findOneAndUpdate(
-          { _id: req.body.userId },
-          { $addToSet: { thoughts: thought._id } },
+          { username: req.body.username },
+          { $push: { thoughts: thought._id } },
           { new: true }
         );
       })
+      .then((response) =>
+        !response
+          ? res
+              .status(404)
+              .json({ message: 'Thoughts but no user' })
+          : res.json(response)
+      )
       .catch((err) => {
         console.log(err);
         return res.status(500).json(err);
@@ -50,7 +57,14 @@ module.exports = {
   },
   // Delete a thought by ID
   deleteThoughtById(req, res) {
-    Thought.findOneAndDelete({ _id: req.params.thoughtId })
+    Thought.findOneAndRemove({ _id: req.params.thoughtId })
+      .then(() =>
+        User.findOneAndUpdate(
+          { thoughts: req.params.thoughtId },
+          { $pull: { thoughts: req.params.thoughtId } },
+          { new: true }
+        )
+      )
       .then((thought) =>
         !thought
           ? res.status(404).json({ message: 'Oops! No thoughts.' })
@@ -63,35 +77,30 @@ module.exports = {
   //-----REACTIONS
   // Create a reaction
   createReaction(req, res) {
-    Thought.create(req.body)
-      .then((reaction) => {
-        return User.findOneAndUpdate(
-          { _id: req.body.userId },
-          { $addToSet: { reactions: reaction._id } },
-          { new: true }
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-        return res.status(500).json(err);
-      });
+    Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $addToSet: { reactions: req.body } },
+      { runValidators: true, new: true }
+    )
+      .then((thought) =>
+        !thought
+          ? res.status(404).json({ message: 'Oops! No thoughts. ' })
+          : res.json(thought)
+      )
+      .catch((err) => res.status(500).json(err));
   },
   // Delete reaction by ID
-  removeReaction(req, res) {
+  deleteReactionById(req, res) {
     Thought.findOneAndUpdate(
-        { _id: req.params.thoughtId },
-        { $pull: { reactions: { reactionId: req.body.reactionId } } },
-        { runValidators: true, new: true }
+      { _id: req.params.thoughtId },
+      { $pull: { reactions: req.body } },
+      { runValidators: true, new: true }
     )
-        .then((thought) =>
-            thought
-                ? res
-                    .status(404)
-                    .json({ message: 'No thought found with that ID :(' })
-                : res.json(thought)
-        )
-        .catch((err) => res.status(500).json(err));
+      .then((thought) =>
+        thought
+          ? res.status(404).json({ message: 'Oops! No thoughts. ' })
+          : res.json(thought)
+      )
+      .catch((err) => res.status(500).json(err));
   }
 };
-
-
