@@ -1,7 +1,7 @@
 const { Thought, User } = require('../models');
 
 module.exports = {
-  //-----THOUGHTS 
+  //-----THOUGHTS
   // Get all thoughts
   getThoughts(req, res) {
     Thought.find()
@@ -63,7 +63,7 @@ module.exports = {
   //-----REACTIONS
   // Create a reaction
   createReaction(req, res) {
-    Reaction.create(req.body)
+    Thought.create(req.body)
       .then((reaction) => {
         return User.findOneAndUpdate(
           { _id: req.body.userId },
@@ -76,15 +76,22 @@ module.exports = {
         return res.status(500).json(err);
       });
   },
-  // Delete reaction by ID 
-  deleteReactionById(req, res) {
-    Reaction.findOneAndDelete({ _id: req.params.reactionId })
-      .then((reaction) =>
-        !reaction
-          ? res.status(404).json({ message: 'Oops! No reactions.' })
-          : User.deleteMany({ _id: { $in: reaction.username } })
-      )
-      .then(() => res.json({ message: 'No more reactions!' }))
-      .catch((err) => res.status(500).json(err));
-  },
+  // Delete reaction by ID
+  removeReaction(req, res) {
+    Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $pull: { reactions: { reactionId: req.body.reactionId } } },
+        { runValidators: true, new: true }
+    )
+        .then((thought) =>
+            thought
+                ? res
+                    .status(404)
+                    .json({ message: 'No thought found with that ID :(' })
+                : res.json(thought)
+        )
+        .catch((err) => res.status(500).json(err));
+  }
 };
+
+
